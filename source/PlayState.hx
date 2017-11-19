@@ -8,9 +8,13 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 class PlayState extends FlxState
 {
+	private var _player:Player;
+	
+	
 	private var song:FlxSound;
 	private var lastBeat:Float;
 	private var lastBar:Float;
@@ -30,6 +34,13 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		FlxG.fixedTimestep = false;
+		FlxG.camera.bgColor = FlxColor.WHITE;
+		
+		_player = new Player(0, 100);
+		_player.screenCenter(X);
+		add(_player);
+		
+		
 		
 		initSong();
 		
@@ -38,6 +49,7 @@ class PlayState extends FlxState
 		
 		_text = new FlxText(0, 0, 0, "Inhale", 30);
 		_text.screenCenter();
+		_text.color = FlxColor.BLACK;
 		add(_text);
 		
 		textResize();
