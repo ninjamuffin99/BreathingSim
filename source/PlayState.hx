@@ -14,6 +14,9 @@ class PlayState extends FlxState
 {
 	private var _player:Player;
 	
+	private var _titleText:FlxText;
+	private var _subText:FlxText;
+	private var _textSucked:Bool = false;
 	
 	private var song:FlxSound;
 	private var lastBeat:Float;
@@ -40,16 +43,27 @@ class PlayState extends FlxState
 		_player.screenCenter(X);
 		add(_player);
 		
+		_titleText = new FlxText(0, FlxG.height * 0.07, 0, "Breathing Simulator", 40);
+		_titleText.screenCenter(X);
+		_titleText.color = FlxColor.BLACK;
+		add(_titleText);
 		
+		_subText = new FlxText(0, FlxG.height * 0.16, 0, "A game by NinjaMuffin99 and BrandyBuizel \nPress and hold Space to breathe", 15);
+		_subText.alignment = FlxTextAlign.CENTER;
+		_subText.color = FlxColor.BLACK;
+		_subText.screenCenter(X);
+		add(_subText);
 		
 		initSong();
 		
 		lastBeat = 0;
 		lastBar = 0;
 		
-		_text = new FlxText(0, 0, 0, "Inhale", 30);
-		_text.screenCenter();
+		_text = new FlxText(0, FlxG.height * 0.07 , 0, "Inhale", 30);
+		_text.screenCenter(X);
+		_text.centerOrigin();
 		_text.color = FlxColor.BLACK;
+		_text.alpha = 0;
 		add(_text);
 		
 		textResize();
@@ -63,12 +77,28 @@ class PlayState extends FlxState
 		song = new FlxSound();
 		song.loadEmbedded("assets/music/I-Am.mp3");
 		add(song);
-		song.play();
+		
 	}
 
 	override public function update(elapsed:Float):Void
 	{	
 		super.update(elapsed);
+		
+		if (FlxG.keys.justPressed.SPACE && !_textSucked)
+		{
+			FlxTween.tween(_titleText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: 360}, 2.25);
+			FlxTween.tween(_subText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: -460}, 2.5);
+			FlxTween.tween(_text, {alpha: 1}, 3);
+			_textSucked = true;
+			song.play();
+			song.fadeIn(3.5);
+		}
+		
+		if (_titleText.size == 1)
+		{
+			_titleText.visible = false;
+			_subText.visible = false;
+		}
 		
 		Conductor.songPosition = song.time;
 		
