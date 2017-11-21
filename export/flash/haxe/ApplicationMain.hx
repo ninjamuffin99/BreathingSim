@@ -139,7 +139,7 @@ class ApplicationMain {
 		
 		config = {
 			
-			build: "43",
+			build: "44",
 			company: "ninjaMuffin",
 			file: "BreathingSim",
 			fps: 60,
