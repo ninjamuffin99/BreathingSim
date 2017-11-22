@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.math.FlxMath;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 /**
@@ -10,6 +11,8 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
  */
 class Player extends FlxSprite 
 {
+	private var midBreatheFrames:Int = 0;
+	private var oldAnimFrames:Int = 0;
 
 	public function new(?X:Float=0, ?Y:Float=0, ?SimpleGraphic:FlxGraphicAsset) 
 	{
@@ -94,7 +97,6 @@ class Player extends FlxSprite
 		
 		
 		
-		
 		animation.play("idle");
 	}
 	
@@ -102,14 +104,22 @@ class Player extends FlxSprite
 	{
 		super.update(elapsed);
 		
+		midBreatheFrames = Std.int(FlxMath.remapToRange(animation.curAnim.curFrame, animation.curAnim.numFrames, 0, oldAnimFrames, 0));
+		
 		if (FlxG.keys.justPressed.SPACE)
 		{
 			animation.play("Inhale");
+			oldAnimFrames = 119;
+			//136 frames
+			FlxG.log.add(animation.curAnim.numFrames);
 		}
 		
 		if (FlxG.keys.justReleased.SPACE)
 		{
 			animation.play("Exhale");
+			oldAnimFrames = 136;
+			//119 frames
+			FlxG.log.add(animation.curAnim.numFrames);
 		}
 		
 	}
