@@ -33,6 +33,11 @@ class PlayState extends FlxState
 	private var _inhale:Bool = true;
 	private var _text:FlxText;
 	
+	private var finished:Bool = false;
+	private var endBG:FlxSprite;
+	private var theEnd:FlxText;
+	private var creds:FlxText;
+	
 	
 	override public function create():Void
 	{
@@ -67,8 +72,29 @@ class PlayState extends FlxState
 		add(_text);
 		
 		textResize();
+		endCreds();
 		
 		super.create();
+	}
+	
+	private function endCreds():Void
+	{
+		endBG = new FlxSprite(0, 0);
+		endBG.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		endBG.visible = false;
+		add(endBG);
+		
+		theEnd = new FlxText(0, 0, 0, "The End", 40);
+		theEnd.alignment = FlxTextAlign.CENTER;
+		theEnd.screenCenter();
+		theEnd.visible = false;
+		add(theEnd);
+		
+		creds = new FlxText(0, FlxG.height * 0.6, 0, "Breathing Simulator\nA game by ninjamuffin99 and BrandyBuizel\nMusic: I Am by RealFaction and VOEC\n\nPress R to reset", 20);
+		creds.alignment = FlxTextAlign.CENTER;
+		creds.screenCenter(X);
+		creds.visible = false;
+		add(creds);
 	}
 	
 	
@@ -100,6 +126,17 @@ class PlayState extends FlxState
 			_subText.visible = false;
 		}
 		
+		if (finished)
+		{
+			if (FlxG.keys.justPressed.R)
+			{
+				FlxG.resetGame();
+			}
+		}
+		/*	
+		if (FlxG.keys.justPressed.A)
+			endGame();
+		*/
 		Conductor.songPosition = song.time;
 		
 		positionCheck();
@@ -127,6 +164,11 @@ class PlayState extends FlxState
 			
 			FlxG.log.add("BEEAT" + _totalBeats);
 			
+			if (_totalBeats == 172)
+			{
+				endGame();
+			}
+			
 		}
 		
 		//Runs every bar
@@ -143,6 +185,15 @@ class PlayState extends FlxState
 			
 			FlxG.log.add("BAR " + _totalBars);
 		}
+	}
+	
+	private function endGame():Void
+	{
+		endBG.visible = true;
+		creds.visible = true;
+		theEnd.visible = true;
+		finished = true;
+		
 	}
 	
 	private function textResize():Void
