@@ -43,6 +43,7 @@ class PlayState extends FlxState
 	{
 		FlxG.fixedTimestep = false;
 		FlxG.camera.bgColor = FlxColor.WHITE;
+		FlxG.mouse.visible = false;
 		
 		_player = new Player(0, 100);
 		_player.screenCenter(X);
@@ -101,7 +102,11 @@ class PlayState extends FlxState
 	private function initSong():Void
 	{
 		song = new FlxSound();
+		#if flash
 		song.loadEmbedded("assets/music/I-Am.mp3");
+		#else
+		song.loadEmbedded("assets/music/I-Am.ogg");
+		#end
 		add(song);
 		
 	}
@@ -112,12 +117,18 @@ class PlayState extends FlxState
 		
 		if (FlxG.keys.justPressed.SPACE && !_textSucked)
 		{
-			FlxTween.tween(_titleText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: 360}, 2.25);
-			FlxTween.tween(_subText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: -460}, 2.5);
-			FlxTween.tween(_text, {alpha: 1}, 3);
-			_textSucked = true;
-			song.play();
-			song.fadeIn(3.5);
+			firstPress();
+		}
+		
+		if (FlxG.onMobile)
+		{
+			for (touch in FlxG.touches.list)
+			{
+				if (touch.justPressed && !_textSucked)
+				{
+					firstPress();
+				}
+			}
 		}
 		
 		if (_titleText.size == 1)
@@ -150,6 +161,16 @@ class PlayState extends FlxState
 			_text.text = "Exhale";
 		}
 		
+	}
+	
+	private function firstPress():Void
+	{
+		FlxTween.tween(_titleText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: 360}, 2.25);
+			FlxTween.tween(_subText, {x: FlxG.width / 2, y: FlxG.width / 2, size:1, angle: -460}, 2.5);
+			FlxTween.tween(_text, {alpha: 1}, 3);
+			_textSucked = true;
+			song.play();
+			song.fadeIn(3.5);
 	}
 	
 	private function positionCheck():Void

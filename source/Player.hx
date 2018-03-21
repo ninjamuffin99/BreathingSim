@@ -108,20 +108,46 @@ class Player extends FlxSprite
 		
 		if (FlxG.keys.justPressed.SPACE)
 		{
-			animation.play("Inhale");
-			oldAnimFrames = 119;
-			//136 frames
-			FlxG.log.add(animation.curAnim.numFrames);
+			inhale();
 		}
 		
 		if (FlxG.keys.justReleased.SPACE)
 		{
-			animation.play("Exhale");
-			oldAnimFrames = 136;
-			//119 frames
-			FlxG.log.add(animation.curAnim.numFrames);
+			exhale();
 		}
 		
+		if (FlxG.onMobile)
+		{
+			for (touch in FlxG.touches.list)
+			{
+				if (touch.justPressed)
+				{
+					inhale();
+				}
+				if (touch.justReleased)
+				{
+					exhale();
+				}
+			}
+		}
+		
+	}
+	
+	private function inhale():Void
+	{
+		animation.play("Inhale");
+		oldAnimFrames = 119;
+		//136 frames
+		FlxG.log.add(animation.curAnim.numFrames);
+	}
+	
+	private function exhale():Void
+	{
+		
+		animation.play("Exhale");
+		oldAnimFrames = 136;
+		//119 frames
+		FlxG.log.add(animation.curAnim.numFrames);
 	}
 	
 }
